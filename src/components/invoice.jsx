@@ -1,6 +1,7 @@
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import React, { useState } from "react";
+import EmiDetails from "./emiDetails";
 
 export default function Invoice() {
   const printRef = React.useRef(null);
@@ -14,7 +15,8 @@ export default function Invoice() {
       permanentAddress: '',
       currentAddress: '',
       aadharNumber: '',
-      phoneNumber: ''
+      phoneNumber: '',
+
     },
     accountDetails: {
       bankName: '',
@@ -33,11 +35,12 @@ export default function Invoice() {
       billingAmount: '',
       downPayment: '',
       loanAmount: ''
+    },
+    emiDetails: {
+      totalMonths: 1,
+      emiAmount: '',
     }
   });
-
-  const emiDates = ["2023-01-01", "2023-02-01", "2023-03-01"]; // Example dates
-  const emiAmount = 5000; // Example EMI amount
 
   const handleInputChange = (section, field, value) => {
     setFormData(prev => ({
@@ -51,7 +54,7 @@ export default function Invoice() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form Data:', formData);
+    handleDownloadPdf();
   };
 
   const handleDownloadPdf = async () => {
@@ -101,7 +104,7 @@ export default function Invoice() {
                   {[
                     { id: 'customerName', label: "Name", type: "text", value: formData.customerDetails.customerName },
                     { id: 'dob', label: "Date of Birth", type: "date", value: formData.customerDetails.dob },
-                    { id: 'gender', label: "Gender", type: "select", options: ["", "male", "female", "other"], value: formData.customerDetails.gender },
+                    { id: 'gender', label: "Gender", type: "select", options: ["", "Male", "Female", "Other"], value: formData.customerDetails.gender },
                     { id: 'fatherName', label: "Father's Name", type: "text", value: formData.customerDetails.fatherName },
                     { id: 'permanentAddress', label: "Permanent Address", type: "textarea", value: formData.customerDetails.permanentAddress },
                     { id: 'currentAddress', label: "Current Address", type: "textarea", value: formData.customerDetails.currentAddress },
@@ -201,140 +204,146 @@ export default function Invoice() {
                 </div>
               </div>
 
-              <button type="submit" className="w-full py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-200">Submit</button>
+              {/* Emi Details Section */}
+              <div className="space-y-4">
+                <h2 className="text-2xl font-bold text-gray-800">EMI Details</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {[
+                    { id: 'totalMonths', label: "Total Months", type: "number", value: formData.emiDetails.totalMonths },
+                    { id: 'emiAmount', label: "EMI Amount", type: "number", value: formData.emiDetails.emiAmount },
+                  ].map(({ id, label, type, value }) => (
+                    <div key={id} className="space-y-2">
+                      <label htmlFor={id} className="text-gray-700">{label}</label>
+                      <input
+                        type={type}
+                        id={id}
+                        className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value={value}
+                        onChange={(e) => handleInputChange('emiDetails', id, e.target.value)}
+                        required
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <button type="submit" className="w-full py-3 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-200">Generate Invoice</button>
             </form>
           </div>
         </div>
-        <div ref={printRef} className="p-8 bg-white border border-gray-200">
-          <div className="w-full max-w-6xl mx-auto bg-white p-8">
+        <div ref={printRef} className="p-8 bg-white">
+          <div className="w-full max-w-6xl mx-auto bg-white p-4">
             {/* Header Section */}
             <div className="flex items-center justify-between mb-8 border-b pb-6">
-              <div className="logo w-24 h-24 bg-gray-200 flex items-center justify-center">
-                <img src="/api/placeholder/96/96" alt="Logo" className="w-full h-full object-contain" />
+              <div className="logo w-48 h-48 bg-gray-200 flex items-center justify-center">
+                <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
               </div>
               <div className="text-right">
-                <h1 className="text-2xl font-bold">KP Mobiles</h1>
-                <h3 className="text-gray-600">Mobile Point, Raikera Chowk</h3>
-                <h3 className="text-gray-600">Kotrimal, Ghargoda, Raigarh, Chhattisgarh</h3>
-                <h3 className="text-gray-600">PIN-496111</h3>
+                <h1 className="text-5xl font-bold mb-4">KP Mobiles</h1>
+                <h3 className="text-xl text-gray-600">Mobile Point, Raikera Chowk</h3>
+                <h3 className="text-xl text-gray-600">Kotrimal, Ghargoda, Raigarh, Chhattisgarh</h3>
+                <h3 className="text-xl text-gray-600">PIN-496111</h3>
               </div>
             </div>
 
             {/* Main Content */}
             <div className="flex flex-col md:flex-row gap-8">
               {/* Left Section */}
-              <div className="w-full md:w-1/3">
+              <div className="w-full md:w-1/4 bg-neutral-100 p-4">
+                {/* Photograph */}
+                <div className="mb-8">
+                  <div className="w-40 h-52 border border-neutral-500 flex items-center justify-center text-center p-4 text-neutral-500">
+                    Passport size photograph
+                  </div>
+                </div>
+
                 {/* Customer Details */}
                 <div className="mb-8">
-                  <h2 className="text-lg font-semibold mb-4">Customer Details</h2>
-                  <div className="space-y-2">
-                    <p><strong>Name:</strong> {formData.customerDetails.customerName}</p>
-                    <p><strong>Date of Birth:</strong> {formData.customerDetails.dob}</p>
-                    <p><strong>Gender:</strong> {formData.customerDetails.gender}</p>
-                    <p><strong>Father's Name:</strong> {formData.customerDetails.fatherName}</p>
-                    <p><strong>Permanent Address:</strong> {formData.customerDetails.permanentAddress}</p>
-                    <p><strong>Current Address:</strong> {formData.customerDetails.currentAddress}</p>
-                    <p><strong>Aadhar:</strong> {formData.customerDetails.aadharNumber}</p>
-                    <p><strong>Phone:</strong> {formData.customerDetails.phoneNumber}</p>
+                  <h2 className="text-2xl font-semibold mb-4">Customer Details</h2>
+                  <div className="space-y-3">
+                    <p><span className="font-semibold">Name</span> <br /> {formData.customerDetails.customerName}</p>
+                    <p><span className="font-semibold">Date of Birth</span> <br /> {formData.customerDetails.dob}</p>
+                    <p><span className="font-semibold">Gender</span> <br /> {formData.customerDetails.gender}</p>
+                    <p><span className="font-semibold">Father's Name</span> <br /> {formData.customerDetails.fatherName}</p>
+                    <p><span className="font-semibold">Permanent Address</span> <br /> {formData.customerDetails.permanentAddress}</p>
+                    <p><span className="font-semibold">Current Address</span> <br /> {formData.customerDetails.currentAddress}</p>
+                    <p><span className="font-semibold">Aadhar</span> <br /> {formData.customerDetails.aadharNumber}</p>
+                    <p><span className="font-semibold">Phone</span> <br /> {formData.customerDetails.phoneNumber}</p>
                   </div>
                 </div>
 
                 {/* Account Details */}
                 <div>
-                  <h2 className="text-lg font-semibold mb-4">Account Details</h2>
-                  <div className="space-y-2">
-                    <p><strong>Bank Name:</strong> {formData.accountDetails.bankName}</p>
-                    <p><strong>Account Number:</strong> {formData.accountDetails.accountNumber}</p>
-                    <p><strong>IFSC Code:</strong> {formData.accountDetails.ifscCode}</p>
-                    <p><strong>PAN Number:</strong> {formData.accountDetails.panNumber}</p>
+                  <h2 className="text-2xl font-semibold mb-4">Account Details</h2>
+                  <div className="space-y-3">
+                    <p><span className="font-semibold">Bank Name</span> <br /> {formData.accountDetails.bankName}</p>
+                    <p><span className="font-semibold">Account Number</span> <br /> {formData.accountDetails.accountNumber}</p>
+                    <p><span className="font-semibold">IFSC Code</span> <br /> {formData.accountDetails.ifscCode}</p>
+                    <p><span className="font-semibold">PAN Number</span> <br /> {formData.accountDetails.panNumber}</p>
                   </div>
                 </div>
               </div>
 
               {/* Right Section */}
-              <div className="w-full md:w-2/3">
-                {/* Phone Details */}
-                <div className="mb-8">
-                  <h2 className="text-lg font-semibold mb-4">Phone Details</h2>
-                  <table className="w-full border-collapse">
-                    <tbody>
-                      <tr className="border">
-                        <td className="p-2 font-semibold">Phone Name</td>
-                        <td className="p-2">{formData.phoneDetails.phoneName}</td>
-                        <td className="p-2 font-semibold">Model Number</td>
-                        <td className="p-2">{formData.phoneDetails.modelNumber}</td>
-                      </tr>
-                      <tr className="border">
-                        <td className="p-2 font-semibold">IMEI 1</td>
-                        <td className="p-2">{formData.phoneDetails.imei1}</td>
-                        <td className="p-2 font-semibold">IMEI 2</td>
-                        <td className="p-2">{formData.phoneDetails.imei2}</td>
-                      </tr>
-                      <tr className="border">
-                        <td className="p-2 font-semibold">Serial Number</td>
-                        <td className="p-2">{formData.phoneDetails.serialNumber}</td>
-                        <td className="p-2 font-semibold">Price</td>
-                        <td className="p-2">₹{formData.phoneDetails.price}</td>
-                      </tr>
-                      <tr className="border">
-                        <td className="p-2 font-semibold">File Charges</td>
-                        <td className="p-2">₹{formData.phoneDetails.fileCharges}</td>
-                        <td className="p-2 font-semibold">Billing Amount</td>
-                        <td className="p-2">₹{formData.phoneDetails.billingAmount}</td>
-                      </tr>
-                      <tr className="border">
-                        <td className="p-2 font-semibold">Down Payment</td>
-                        <td className="p-2">₹{formData.phoneDetails.downPayment}</td>
-                        <td className="p-2 font-semibold">Loan Amount</td>
-                        <td className="p-2">₹{formData.phoneDetails.loanAmount}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
-                {/* EMI Details */}
-                <div className="mb-8">
-                  <h2 className="text-xl font-semibold mb-4">EMI Details</h2>
-                  <table className="w-full border-collapse">
-                    <thead>
-                      <tr className="bg-gray-100">
-                        <th className="p-2 border">S. No.</th>
-                        <th className="p-2 border">Date</th>
-                        <th className="p-2 border">Billing Amount</th>
-                        <th className="p-2 border">Customer's Sign</th>
-                        <th className="p-2 border">Retailer's Sign</th>
-                        <th className="p-2 border">Penalty</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {emiDates.map((date, index) => (
-                        <tr key={index} className="border">
-                          <td className="p-2 text-center">{String(index + 1).padStart(2, '0')}</td>
-                          <td className="p-2 text-center">{date}</td>
-                          <td className="p-2 text-center">₹{emiAmount}</td>
-                          <td className="p-2 text-center">________</td>
-                          <td className="p-2 text-center">________</td>
-                          <td className="p-2 text-center">₹0</td>
+              <div className="w-full md:w-3/4 p-4 flex flex-col justify-between">
+                <div>
+                  {/* Phone Details */}
+                  <div className="mb-8">
+                    <h2 className="text-2xl font-semibold mb-4">Phone Details</h2>
+                    <table className="w-full border-collapse">
+                      <tbody>
+                        <tr className="border">
+                          <td className="p-2 font-semibold">Phone Name</td>
+                          <td className="p-2">{formData.phoneDetails.phoneName}</td>
+                          <td className="p-2 font-semibold">Model Number</td>
+                          <td className="p-2">{formData.phoneDetails.modelNumber}</td>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                        <tr className="border">
+                          <td className="p-2 font-semibold">IMEI 1</td>
+                          <td className="p-2">{formData.phoneDetails.imei1}</td>
+                          <td className="p-2 font-semibold">IMEI 2</td>
+                          <td className="p-2">{formData.phoneDetails.imei2}</td>
+                        </tr>
+                        <tr className="border">
+                          <td className="p-2 font-semibold">Serial Number</td>
+                          <td className="p-2">{formData.phoneDetails.serialNumber}</td>
+                          <td className="p-2 font-semibold">Price</td>
+                          <td className="p-2">₹{formData.phoneDetails.price}</td>
+                        </tr>
+                        <tr className="border">
+                          <td className="p-2 font-semibold">File Charges</td>
+                          <td className="p-2">₹{formData.phoneDetails.fileCharges}</td>
+                          <td className="p-2 font-semibold">Billing Amount</td>
+                          <td className="p-2">₹{formData.phoneDetails.billingAmount}</td>
+                        </tr>
+                        <tr className="border">
+                          <td className="p-2 font-semibold">Down Payment</td>
+                          <td className="p-2">₹{formData.phoneDetails.downPayment}</td>
+                          <td className="p-2 font-semibold">Loan Amount</td>
+                          <td className="p-2">₹{formData.phoneDetails.loanAmount}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* EMI Details */}
+                  <EmiDetails emiDetails={{ totalMonths: formData.emiDetails.totalMonths, emiAmount: formData.emiDetails.emiAmount }} />
                 </div>
 
                 {/* Signature Section */}
                 <div className="flex justify-between items-end">
                   <div className="space-y-4">
-                    <div>
+                    <div className="flex items-end gap-4">
                       <p className="font-semibold">Customer's Final Signature:</p>
                       <p className="mt-4">______________________</p>
                     </div>
-                    <div>
+                    <div className="flex items-end gap-4">
                       <p className="font-semibold">Retailer's Final Signature:</p>
                       <p className="mt-4">______________________</p>
                     </div>
                   </div>
-                  <div className="w-24 h-24 bg-gray-200 flex items-center justify-center">
-                    QR Code
+                  <div className="w-80 bg-gray-200 flex items-center justify-center">
+                    <img src="/qr.webp" alt="" className="w-full" />
                   </div>
                 </div>
               </div>
