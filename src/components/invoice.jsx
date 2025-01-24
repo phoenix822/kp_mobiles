@@ -235,7 +235,7 @@ export default function Invoice() {
           <div className="w-full max-w-6xl mx-auto bg-white p-4">
             {/* Header Section */}
             <div className="flex items-center justify-between mb-8 border-b pb-6">
-              <div className="logo w-48 h-48 bg-gray-200 flex items-center justify-center">
+              <div className="logo w-48 h-48  flex items-center justify-center">
                 <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
               </div>
               <div className="text-right">
@@ -343,7 +343,7 @@ export default function Invoice() {
                     </div>
                   </div>
                   <div className="w-80 bg-gray-200 flex items-center justify-center">
-                    <img src="/qr.webp" alt="" className="w-full" />
+                    <img src="/qr.jpg" alt="" className="w-full" />
                   </div>
                 </div>
               </div>
