@@ -236,7 +236,7 @@ export default function Invoice() {
         <div ref={printRef} className="p-8 bg-white">
           <div className="w-full max-w-6xl mx-auto bg-white p-4">
             {/* Header Section */}
-            <div className="flex items-center justify-between mb-8 border-b p-4 bg-neutral-200">
+            <div className="flex items-center justify-between mb-8 border-b-4 pb-6">
               <div className="logo w-48 h-48  flex items-center justify-center">
                 <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
               </div>
