@@ -31,7 +31,7 @@ const EmiDetails = ({ emiDetails }) => {
             <h2 className="text-2xl font-semibold mb-4">EMI Details</h2>
             <table className="w-full border-collapse">
                 <thead>
-                    <tr className="bg-gray-100">
+                    <tr className="bg-neutral-200">
                         <th className="p-2 font-semibold border w-16 text-center">S. No.</th>
                         <th className="p-2 font-semibold border text-center">Date</th>
                         <th className="p-2 font-semibold border text-center">Billing Amount</th>
