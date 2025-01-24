@@ -39,6 +39,7 @@ export default function Invoice() {
     emiDetails: {
       totalMonths: 1,
       emiAmount: '',
+      emiDate: '',
     }
   });
 
@@ -211,6 +212,7 @@ export default function Invoice() {
                   {[
                     { id: 'totalMonths', label: "Total Months", type: "number", value: formData.emiDetails.totalMonths },
                     { id: 'emiAmount', label: "EMI Amount", type: "number", value: formData.emiDetails.emiAmount },
+                    { id: 'emiDate', label: "EMI Date", type: "date", value: formData.emiDetails.emiDate },
                   ].map(({ id, label, type, value }) => (
                     <div key={id} className="space-y-2">
                       <label htmlFor={id} className="text-gray-700">{label}</label>
@@ -243,6 +245,7 @@ export default function Invoice() {
                 <h3 className="text-xl text-gray-600">Mobile Point, Raikera Chowk</h3>
                 <h3 className="text-xl text-gray-600">Kotrimal, Ghargoda, Raigarh, Chhattisgarh</h3>
                 <h3 className="text-xl text-gray-600">PIN-496111</h3>
+                <h3 className="text-xl text-gray-600">Phone - 8709897531</h3>
               </div>
             </div>
 
@@ -327,11 +330,11 @@ export default function Invoice() {
                   </div>
 
                   {/* EMI Details */}
-                  <EmiDetails emiDetails={{ totalMonths: formData.emiDetails.totalMonths, emiAmount: formData.emiDetails.emiAmount }} />
+                  <EmiDetails emiDetails={{ totalMonths: formData.emiDetails.totalMonths, emiAmount: formData.emiDetails.emiAmount, emiDate: formData.emiDetails.emiDate }} />
                 </div>
 
                 {/* Signature Section */}
-                <div className="flex justify-between items-end">
+                <div className="flex justify-between items-center mt-auto">
                   <div className="space-y-4">
                     <div className="flex items-end gap-4">
                       <p className="font-semibold">Customer's Final Signature:</p>
@@ -342,8 +345,8 @@ export default function Invoice() {
                       <p className="mt-4">______________________</p>
                     </div>
                   </div>
-                  <div className="w-80 bg-gray-200 flex items-center justify-center">
-                    <img src="/qr.jpg" alt="" className="w-full" />
+                  <div className="w-80 bg-gray-200 flex  items-center justify-center">
+                    <img src="/qr.png" alt="" className="w-full" />
                   </div>
                 </div>
               </div>

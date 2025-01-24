@@ -1,21 +1,28 @@
 import React from "react";
 
 const EmiDetails = ({ emiDetails }) => {
-    const { totalMonths, emiAmount } = emiDetails;
+    const { totalMonths, emiAmount, emiDate } = emiDetails;
 
     const calculateEmiDates = (startDate, months) => {
         const dates = [];
-        let currentDate = new Date(startDate);
 
-        for (let i = 0; i < months; i++) {
+        let currentDate = new Date(startDate);
+        dates.push(new Date(currentDate));
+
+        for (let i = 0; i < months - 1; i++) {
             currentDate.setMonth(currentDate.getMonth() + 1);
             dates.push(new Date(currentDate));
         }
         return dates;
     };
+    const formatEmiDate = (dateToFormat) => {
+        const formatedDate = new Date(dateToFormat);
+        return formatedDate.toString();
+    };
 
-    const today = new Date();
-    const emiDates = calculateEmiDates(today, totalMonths);
+    const firstEmiDate = formatEmiDate(emiDate)
+
+    const emiDates = calculateEmiDates(firstEmiDate, totalMonths);
 
     const emiPerMonth = (emiAmount / totalMonths).toFixed(2);
 
