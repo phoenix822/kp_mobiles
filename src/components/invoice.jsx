@@ -67,7 +67,7 @@ export default function Invoice() {
 
     try {
       const canvas = await html2canvas(element, {
-        scale: 1,
+        scale: 2,
       });
       const data = canvas.toDataURL("image/png");
 
@@ -236,7 +236,7 @@ export default function Invoice() {
         <div ref={printRef} className="p-8 bg-white">
           <div className="w-full max-w-6xl mx-auto bg-white p-4">
             {/* Header Section */}
-            <div className="flex items-center justify-between mb-8 border-b pb-6">
+            <div className="flex items-center justify-between mb-8 border-b p-4 bg-neutral-200">
               <div className="logo w-48 h-48  flex items-center justify-center">
                 <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
               </div>
@@ -252,7 +252,7 @@ export default function Invoice() {
             {/* Main Content */}
             <div className="flex flex-col md:flex-row gap-8">
               {/* Left Section */}
-              <div className="w-full md:w-1/4 bg-neutral-100 p-4">
+              <div className="w-full md:w-1/4 bg-neutral-200 p-4">
                 {/* Photograph */}
                 <div className="mb-8">
                   <div className="w-40 h-52 border border-neutral-500 flex items-center justify-center text-center p-4 text-neutral-500">
